@@ -26,6 +26,10 @@ migrate_working_dir/
 .env
 .env.*
 
+#build runner files
+**/*.g.dart
+**/*.freezed.dart
+
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/custom_snackbar.dart';
 import '../../../../core/widgets/phone_input_field.dart';
+
+import '../bloc/auth_bloc.dart';
 
 import '../widgets/auth_header.dart';
 import '../widgets/terms_checkbox.dart';
@@ -29,7 +32,6 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _acceptedTerms = false;
-  bool _isLoading = false;
 
   // Store the country dial code from PhoneInputField
   String _countryDialCode = '+1';
@@ -117,27 +119,15 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
-    if (!_acceptedTerms) {
-      CustomSnackbar.error(context, 'Please accept the Terms & Conditions');
-
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    // TODO: Implement actual signup logic
-    // Full phone number would be: _countryDialCode + _phoneController.text
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-
-        CustomSnackbar.success(context, 'Account created successfully!');
-      }
-    });
+    context.read<AuthBloc>().add(
+      SignUpWithEmailAndPasswordEvent(
+        displayName: _nameController.text.trim(),
+        phoneNumber:
+            '${_countryDialCode.trim()}${_phoneController.text.trim()}',
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      ),
+    );
   }
 
   void _handleSocialAuth(String provider) {
@@ -167,196 +157,217 @@ class _SignupScreenState extends State<SignupScreen> {
 
     return Scaffold(
       appBar: canPop ? AppBar() : null,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Header
-                const AuthHeader(
-                  title: 'Create Account',
-                  subtitle: 'Sign up to get started with your new account',
-                ),
-                const SizedBox(height: 32),
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is SignUpWithEmailAndPasswordSuccess) {
+            CustomSnackbar.success(context, 'Sign up successful!');
+          }
 
-                // Name field
-                TextFormField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Full Name',
-                    hintText: 'Enter your full name',
-                    prefixIcon: Icon(Icons.person_outline),
-                  ),
-                  keyboardType: TextInputType.name,
-                  textCapitalization: TextCapitalization.words,
-                  autofillHints: const [AutofillHints.name],
-                  validator: _validateName,
-                ),
-                const SizedBox(height: 16),
+          if (state is SignUpWithEmailAndPasswordFailure) {
+            CustomSnackbar.error(context, state.message);
+          }
+        },
+        builder: (context, state) {
+          final isLoading = state is SignUpWithEmailAndPasswordLoading;
 
-                // Email field
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'Enter your email',
-                    prefixIcon: Icon(Icons.email_outlined),
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  autofillHints: const [AutofillHints.email],
-                  validator: _validateEmail,
-                ),
-                const SizedBox(height: 16),
-
-                // Phone field with country code picker
-                PhoneInputField(
-                  controller: _phoneController,
-                  validator: _validatePhone,
-                  labelText: 'Phone Number',
-                  hintText: 'Enter your phone number',
-                  initialCountryCode: 'US',
-                  favoriteCountries: const ['+1', '+91', '+44', '+61'],
-                  onCountryChanged: (dialCode) {
-                    setState(() {
-                      _countryDialCode = dialCode;
-                    });
-                  },
-                ),
-                const SizedBox(height: 16),
-
-                // Password field
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    hintText: 'Enter your password',
-                    prefixIcon: const Icon(Icons.lock_outline),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscurePassword
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _obscurePassword = !_obscurePassword;
-                        });
-                      },
-                    ),
-                  ),
-                  obscureText: _obscurePassword,
-                  autofillHints: const [AutofillHints.newPassword],
-                  validator: _validatePassword,
-                  onChanged: (value) {
-                    setState(() {});
-                  },
-                ),
-
-                // Password strength indicator
-                PasswordStrengthIndicator(
-                  password: _passwordController.text,
-                  show: _passwordController.text.isNotEmpty,
-                ),
-                const SizedBox(height: 16),
-
-                // Confirm Password field
-                TextFormField(
-                  controller: _confirmPasswordController,
-                  decoration: InputDecoration(
-                    labelText: 'Confirm Password',
-                    hintText: 'Re-enter your password',
-                    prefixIcon: const Icon(Icons.lock_outline),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscureConfirmPassword
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _obscureConfirmPassword = !_obscureConfirmPassword;
-                        });
-                      },
-                    ),
-                  ),
-                  obscureText: _obscureConfirmPassword,
-                  validator: _validateConfirmPassword,
-                ),
-                const SizedBox(height: 24),
-
-                // Terms checkbox
-                TermsCheckbox(
-                  value: _acceptedTerms,
-                  onChanged: (value) {
-                    setState(() {
-                      _acceptedTerms = value ?? false;
-                    });
-                  },
-                  onTermsTap: _showTerms,
-                  onPrivacyTap: _showPrivacy,
-                ),
-                const SizedBox(height: 32),
-
-                // Sign up button
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _handleSignup,
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white,
-                            ),
-                          ),
-                        )
-                      : const Text('Sign Up'),
-                ),
-                const SizedBox(height: 24),
-
-                // OR divider
-                const OrDivider(text: 'Or continue with'),
-                const SizedBox(height: 24),
-
-                // Social auth buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  spacing: 16,
+          return SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Expanded(
-                      child: SocialAuthButton(
-                        provider: 'Google',
-                        icon: Icons.g_mobiledata,
-                        onPressed: () => _handleSocialAuth('Google'),
-                      ),
+                    // Header
+                    const AuthHeader(
+                      title: 'Create Account',
+                      subtitle: 'Sign up to get started with your new account',
                     ),
-                    Expanded(
-                      child: SocialAuthButton(
-                        provider: 'Apple',
-                        icon: Icons.apple,
-                        onPressed: () => _handleSocialAuth('Apple'),
+                    const SizedBox(height: 32),
+
+                    // Name field
+                    TextFormField(
+                      controller: _nameController,
+                      enabled: !isLoading,
+                      decoration: const InputDecoration(
+                        labelText: 'Full Name',
+                        hintText: 'Enter your full name',
+                        prefixIcon: Icon(Icons.person_outline),
                       ),
+                      keyboardType: TextInputType.name,
+                      textCapitalization: TextCapitalization.words,
+                      autofillHints: const [AutofillHints.name],
+                      validator: _validateName,
                     ),
+                    const SizedBox(height: 16),
+
+                    // Email field
+                    TextFormField(
+                      controller: _emailController,
+                      enabled: !isLoading,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        hintText: 'Enter your email',
+                        prefixIcon: Icon(Icons.email_outlined),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      autofillHints: const [AutofillHints.email],
+                      validator: _validateEmail,
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Phone field with country code picker
+                    PhoneInputField(
+                      controller: _phoneController,
+                      enabled: !isLoading,
+                      validator: _validatePhone,
+                      labelText: 'Phone Number',
+                      hintText: 'Enter your phone number',
+                      initialCountryCode: 'US',
+                      favoriteCountries: const ['+1', '+91', '+44', '+61'],
+                      onCountryChanged: (dialCode) {
+                        setState(() {
+                          _countryDialCode = dialCode;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Password field
+                    TextFormField(
+                      controller: _passwordController,
+                      enabled: !isLoading,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        hintText: 'Enter your password',
+                        prefixIcon: const Icon(Icons.lock_outline),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
+                      ),
+                      obscureText: _obscurePassword,
+                      autofillHints: const [AutofillHints.newPassword],
+                      validator: _validatePassword,
+                      onChanged: (value) {
+                        setState(() {});
+                      },
+                    ),
+
+                    // Password strength indicator
+                    PasswordStrengthIndicator(
+                      password: _passwordController.text,
+                      show: _passwordController.text.isNotEmpty,
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Confirm Password field
+                    TextFormField(
+                      controller: _confirmPasswordController,
+                      enabled: !isLoading,
+                      decoration: InputDecoration(
+                        labelText: 'Confirm Password',
+                        hintText: 'Re-enter your password',
+                        prefixIcon: const Icon(Icons.lock_outline),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConfirmPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureConfirmPassword =
+                                  !_obscureConfirmPassword;
+                            });
+                          },
+                        ),
+                      ),
+                      obscureText: _obscureConfirmPassword,
+                      validator: _validateConfirmPassword,
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Terms checkbox
+                    TermsCheckbox(
+                      value: _acceptedTerms,
+                      onChanged: (value) {
+                        setState(() {
+                          _acceptedTerms = value ?? false;
+                        });
+                      },
+                      onTermsTap: _showTerms,
+                      onPrivacyTap: _showPrivacy,
+                    ),
+                    const SizedBox(height: 32),
+
+                    // Sign up button
+                    ElevatedButton(
+                      onPressed: isLoading ? null : _handleSignup,
+                      child: isLoading
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
+                            )
+                          : const Text('Sign Up'),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // OR divider
+                    const OrDivider(text: 'Or continue with'),
+                    const SizedBox(height: 24),
+
+                    // Social auth buttons
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      spacing: 16,
+                      children: [
+                        Expanded(
+                          child: SocialAuthButton(
+                            provider: 'Google',
+                            icon: Icons.g_mobiledata,
+                            onPressed: () => _handleSocialAuth('Google'),
+                          ),
+                        ),
+                        Expanded(
+                          child: SocialAuthButton(
+                            provider: 'Apple',
+                            icon: Icons.apple,
+                            onPressed: () => _handleSocialAuth('Apple'),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 32),
+
+                    // Footer link
+                    AuthFooterLink(
+                      questionText: 'Already have an account?',
+                      actionText: 'Login',
+                      onActionTap: _navigateToLogin,
+                    ),
+                    const SizedBox(height: 16),
                   ],
                 ),
-
-                const SizedBox(height: 32),
-
-                // Footer link
-                AuthFooterLink(
-                  questionText: 'Already have an account?',
-                  actionText: 'Login',
-                  onActionTap: _navigateToLogin,
-                ),
-                const SizedBox(height: 16),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

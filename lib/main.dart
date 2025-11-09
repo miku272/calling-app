@@ -10,6 +10,8 @@ import './core/themes/light_theme.dart';
 import './core/themes/dark_theme.dart';
 import './core/cubits/app_theme/app_theme_cubit.dart';
 
+import './features/auth/presentation/bloc/auth_bloc.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -21,7 +23,10 @@ Future<void> main() async {
 
   runApp(
     MultiBlocProvider(
-      providers: [BlocProvider.value(value: appThemeCubit)],
+      providers: [
+        BlocProvider.value(value: appThemeCubit),
+        BlocProvider(create: (context) => getIt<AuthBloc>()),
+      ],
       child: const CallingApp(),
     ),
   );
