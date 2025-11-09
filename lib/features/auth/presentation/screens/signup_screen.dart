@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/custom_snackbar.dart';
+import '../../../../core/widgets/phone_input_field.dart';
 
 import '../widgets/auth_header.dart';
 import '../widgets/terms_checkbox.dart';
@@ -29,6 +30,9 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _obscureConfirmPassword = true;
   bool _acceptedTerms = false;
   bool _isLoading = false;
+
+  // Store the country dial code from PhoneInputField
+  String _countryDialCode = '+1';
 
   @override
   void dispose() {
@@ -69,6 +73,13 @@ class _SignupScreenState extends State<SignupScreen> {
     if (value.length < 10) {
       return 'Please enter a valid phone number';
     }
+
+    // Validate that we have a valid country code + phone number combination
+    final fullNumber = '$_countryDialCode$value';
+    if (fullNumber.length < 10) {
+      return 'Phone number is too short';
+    }
+
     return null;
   }
 
@@ -117,6 +128,7 @@ class _SignupScreenState extends State<SignupScreen> {
     });
 
     // TODO: Implement actual signup logic
+    // Full phone number would be: _countryDialCode + _phoneController.text
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
         setState(() {
@@ -199,17 +211,19 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Phone field
-                TextFormField(
+                // Phone field with country code picker
+                PhoneInputField(
                   controller: _phoneController,
-                  decoration: const InputDecoration(
-                    labelText: 'Phone Number',
-                    hintText: 'Enter your phone number',
-                    prefixIcon: Icon(Icons.phone_outlined),
-                  ),
-                  keyboardType: TextInputType.phone,
-                  autofillHints: const [AutofillHints.telephoneNumber],
                   validator: _validatePhone,
+                  labelText: 'Phone Number',
+                  hintText: 'Enter your phone number',
+                  initialCountryCode: 'US',
+                  favoriteCountries: const ['+1', '+91', '+44', '+61'],
+                  onCountryChanged: (dialCode) {
+                    setState(() {
+                      _countryDialCode = dialCode;
+                    });
+                  },
                 ),
                 const SizedBox(height: 16),
 
