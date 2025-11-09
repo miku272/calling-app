@@ -36,6 +36,7 @@ class CallingApp extends StatelessWidget {
       builder: (context, appThemeState) {
         return MaterialApp.router(
           title: 'Calling App',
+          debugShowCheckedModeBanner: false,
           theme: LightTheme.theme,
           darkTheme: DarkTheme.theme,
           themeMode: appThemeState.themeMode,

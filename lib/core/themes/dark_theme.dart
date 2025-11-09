@@ -54,7 +54,7 @@ class DarkTheme {
         backgroundColor: AppColors.darkSurface,
         foregroundColor: AppColors.darkOnSurface,
         elevation: 0,
-        scrolledUnderElevation: 1,
+        scrolledUnderElevation: 0,
         centerTitle: true,
         titleTextStyle: TextStyle(
           color: AppColors.darkOnSurface,
