@@ -76,7 +76,7 @@ class LightTheme {
         color: AppColors.surface,
         elevation: 2,
         shadowColor: Colors.black12,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       ),
 
@@ -89,7 +89,7 @@ class LightTheme {
           shadowColor: AppColors.primary.withValues(alpha: 0.4),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
           ),
           textStyle: const TextStyle(
             fontSize: 16,
@@ -106,7 +106,7 @@ class LightTheme {
           side: const BorderSide(color: AppColors.primary, width: 1.5),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
           ),
           textStyle: const TextStyle(
             fontSize: 16,
@@ -121,7 +121,9 @@ class LightTheme {
         style: TextButton.styleFrom(
           foregroundColor: AppColors.primary,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           textStyle: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -158,23 +160,23 @@ class LightTheme {
           vertical: 16,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: AppColors.primary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: AppColors.error, width: 1),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: AppColors.error, width: 2),
         ),
         labelStyle: const TextStyle(
@@ -206,7 +208,7 @@ class LightTheme {
           fontWeight: FontWeight.w500,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
 
       // ===== Dialog Theme =====
@@ -214,7 +216,7 @@ class LightTheme {
         backgroundColor: AppColors.surface,
         elevation: 8,
         shadowColor: Colors.black26,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         titleTextStyle: const TextStyle(
           color: AppColors.onSurface,
           fontSize: 20,
@@ -233,7 +235,7 @@ class LightTheme {
         backgroundColor: AppColors.surface,
         elevation: 8,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         modalBackgroundColor: AppColors.surface,
         modalElevation: 8,
@@ -322,7 +324,7 @@ class LightTheme {
         contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         minLeadingWidth: 40,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(12)),
+          borderRadius: BorderRadius.all(Radius.circular(16)),
         ),
       ),
 
@@ -351,7 +353,7 @@ class LightTheme {
           return Colors.transparent;
         }),
         checkColor: WidgetStateProperty.all(Colors.white),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       ),
 
       // ===== Radio Theme =====
@@ -392,7 +394,7 @@ class LightTheme {
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.onSurface,
         contentTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         behavior: SnackBarBehavior.floating,
         elevation: 6,
       ),
@@ -401,7 +403,7 @@ class LightTheme {
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
           color: AppColors.onSurface.withValues(alpha: 0.9),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
         ),
         textStyle: const TextStyle(color: Colors.white, fontSize: 12),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -537,7 +539,7 @@ class LightTheme {
         dialBackgroundColor: AppColors.surfaceContainer,
         dialTextColor: AppColors.onSurface,
         entryModeIconColor: AppColors.primary,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       ),
 
       // ===== Date Picker Theme =====
@@ -559,14 +561,14 @@ class LightTheme {
         }),
         todayForegroundColor: WidgetStateProperty.all(AppColors.primary),
         todayBorder: const BorderSide(color: AppColors.primary, width: 1),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       ),
 
       // ===== Popup Menu Theme =====
       popupMenuTheme: PopupMenuThemeData(
         color: AppColors.surface,
         elevation: 8,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         textStyle: const TextStyle(color: AppColors.onSurface, fontSize: 16),
       ),
 

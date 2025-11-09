@@ -79,7 +79,7 @@ class DarkTheme {
         color: const Color(0xFF2C2C2E),
         elevation: 3,
         shadowColor: Colors.black54,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       ),
 
@@ -92,7 +92,7 @@ class DarkTheme {
           shadowColor: AppColors.primary.withValues(alpha: 0.5),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
           ),
           textStyle: const TextStyle(
             fontSize: 16,
@@ -109,7 +109,7 @@ class DarkTheme {
           side: const BorderSide(color: AppColors.primary, width: 1.5),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
           ),
           textStyle: const TextStyle(
             fontSize: 16,
@@ -124,7 +124,9 @@ class DarkTheme {
         style: TextButton.styleFrom(
           foregroundColor: AppColors.primary,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           textStyle: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -161,23 +163,23 @@ class DarkTheme {
           vertical: 16,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: AppColors.primary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: AppColors.error, width: 1),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: AppColors.error, width: 2),
         ),
         labelStyle: const TextStyle(
@@ -209,7 +211,7 @@ class DarkTheme {
           fontWeight: FontWeight.w500,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
 
       // ===== Dialog Theme =====
@@ -217,7 +219,7 @@ class DarkTheme {
         backgroundColor: const Color(0xFF2C2C2E),
         elevation: 12,
         shadowColor: Colors.black87,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         titleTextStyle: const TextStyle(
           color: AppColors.darkOnSurface,
           fontSize: 20,
@@ -236,7 +238,7 @@ class DarkTheme {
         backgroundColor: Color(0xFF2C2C2E),
         elevation: 12,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         modalBackgroundColor: Color(0xFF2C2C2E),
         modalElevation: 12,
@@ -325,7 +327,7 @@ class DarkTheme {
         contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         minLeadingWidth: 40,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(12)),
+          borderRadius: BorderRadius.all(Radius.circular(16)),
         ),
       ),
 
@@ -355,7 +357,7 @@ class DarkTheme {
         }),
         checkColor: WidgetStateProperty.all(Colors.white),
         side: const BorderSide(color: Color(0xFF48484A), width: 2),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       ),
 
       // ===== Radio Theme =====
@@ -396,7 +398,7 @@ class DarkTheme {
       snackBarTheme: SnackBarThemeData(
         backgroundColor: const Color(0xFF3A3A3C),
         contentTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         behavior: SnackBarBehavior.floating,
         elevation: 8,
       ),
@@ -405,7 +407,7 @@ class DarkTheme {
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
           color: const Color(0xFF48484A),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
         ),
         textStyle: const TextStyle(color: Colors.white, fontSize: 12),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -541,7 +543,7 @@ class DarkTheme {
         dialBackgroundColor: AppColors.darkSurfaceContainer,
         dialTextColor: AppColors.darkOnSurface,
         entryModeIconColor: AppColors.primary,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       ),
 
       // ===== Date Picker Theme =====
@@ -563,14 +565,14 @@ class DarkTheme {
         }),
         todayForegroundColor: WidgetStateProperty.all(AppColors.primary),
         todayBorder: const BorderSide(color: AppColors.primary, width: 1),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       ),
 
       // ===== Popup Menu Theme =====
       popupMenuTheme: PopupMenuThemeData(
         color: const Color(0xFF2C2C2E),
         elevation: 12,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         textStyle: const TextStyle(
           color: AppColors.darkOnSurface,
           fontSize: 16,
