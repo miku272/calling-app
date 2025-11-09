@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../core/widgets/custom_snackbar.dart';
+
 import '../widgets/auth_header.dart';
 import '../widgets/terms_checkbox.dart';
 import '../widgets/or_divider.dart';
@@ -104,12 +107,8 @@ class _SignupScreenState extends State<SignupScreen> {
     }
 
     if (!_acceptedTerms) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please accept the Terms & Conditions'),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      CustomSnackbar.error(context, 'Please accept the Terms & Conditions');
+
       return;
     }
 
@@ -123,45 +122,31 @@ class _SignupScreenState extends State<SignupScreen> {
         setState(() {
           _isLoading = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Account created successfully!'),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+
+        CustomSnackbar.success(context, 'Account created successfully!');
       }
     });
   }
 
   void _handleSocialAuth(String provider) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Continue with $provider coming soon!'),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    CustomSnackbar.info(context, 'Continue with $provider coming soon!');
   }
 
   void _navigateToLogin() {
-    context.pop();
+    final canPop = context.canPop();
+    if (canPop) {
+      context.replace('/login');
+    } else {
+      context.go('/login');
+    }
   }
 
   void _showTerms() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Terms & Conditions screen coming soon!'),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    CustomSnackbar.info(context, 'Terms & Conditions screen coming soon!');
   }
 
   void _showPrivacy() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Privacy Policy screen coming soon!'),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    CustomSnackbar.info(context, 'Privacy Policy screen coming soon!');
   }
 
   @override
