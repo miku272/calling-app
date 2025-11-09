@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "101146762541",
+    "project_id": "calling-app-practice",
+    "storage_bucket": "calling-app-practice.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:101146762541:android:97041a401d98167665c7a4",
+        "android_client_info": {
+          "package_name": "me.nareshsharma.calling_app_practice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "101146762541-1tf555cpuakc699g0l7r0p2a1q0pm7dh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.nareshsharma.calling_app_practice",
+            "certificate_hash": "3ce17da94d1cc437f7ed924b4339bda3b5787b4b"
+          }
+        },
+        {
+          "client_id": "101146762541-iauqaja9ilb7jl389oh7j74i52hhe4ir.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.nareshsharma.calling_app_practice",
+            "certificate_hash": "9a9ee6b8281de2009de7eb59037ee2b23ecf2a0a"
+          }
+        },
+        {
+          "client_id": "101146762541-dvr6atl6qh1j20u31kn95ji25ag19v7r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhur_7V2DpdE3j5u8EFebwvFNgwm0xXJ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "101146762541-dvr6atl6qh1j20u31kn95ji25ag19v7r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "101146762541-0vbhi5dtanceqk7i3j2a9rdl84jfi8bb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "me.nareshsharma.callingAppPractice"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
