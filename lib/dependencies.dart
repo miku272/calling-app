@@ -6,12 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import './core/services/sf_service.dart';
 import './core/cubits/app_theme/app_theme_cubit.dart';
 
-import './features/auth/data/datasources/auth_remote_datasource.dart';
-import './features/auth/domain/repository/auth_repository.dart';
-import './features/auth/data/repository/auth_repository_impl.dart';
-import './features/auth/domain/usecases/sign_up_with_email_and_password.dart';
-import './features/auth/presentation/bloc/auth_bloc.dart';
-
 final getIt = GetIt.instance;
 
 Future<void> initDependencies() async {
@@ -19,7 +13,6 @@ Future<void> initDependencies() async {
   _initFirebaseServices();
 
   _initAppTheme();
-  _initAuth();
 }
 
 Future<void> _initSfService() async {
@@ -43,28 +36,4 @@ void _initFirebaseServices() {
 
   final firebaseFirestore = FirebaseFirestore.instance;
   getIt.registerLazySingleton<FirebaseFirestore>(() => firebaseFirestore);
-}
-
-void _initAuth() {
-  getIt.registerFactory<AuthRemoteDatasource>(
-    () => AuthRemoteDatasourceImpl(
-      firebaseAuth: getIt<FirebaseAuth>(),
-      firebaseFirestore: getIt<FirebaseFirestore>(),
-    ),
-  );
-
-  getIt.registerFactory<AuthRepository>(
-    () =>
-        AuthRepositoryImpl(authRemoteDatasource: getIt<AuthRemoteDatasource>()),
-  );
-
-  getIt.registerFactory<SignUpWithEmailAndPassword>(
-    () => SignUpWithEmailAndPassword(authRepository: getIt<AuthRepository>()),
-  );
-
-  getIt.registerLazySingleton<AuthBloc>(
-    () => AuthBloc(
-      signUpWithEmailAndPassword: getIt<SignUpWithEmailAndPassword>(),
-    ),
-  );
 }
