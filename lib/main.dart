@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import './firebase_options.dart';
 import './dependencies.dart';
@@ -39,13 +40,18 @@ class CallingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AppThemeCubit, AppThemeState>(
       builder: (context, appThemeState) {
-        return MaterialApp.router(
-          title: 'Calling App',
-          debugShowCheckedModeBanner: false,
-          theme: LightTheme.theme,
-          darkTheme: DarkTheme.theme,
-          themeMode: appThemeState.themeMode,
-          routerConfig: AppRouter.router,
+        return ScreenUtilInit(
+          designSize: const Size(375, 812),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (context, child) => MaterialApp.router(
+            title: 'Calling App',
+            debugShowCheckedModeBanner: false,
+            theme: LightTheme.theme,
+            darkTheme: DarkTheme.theme,
+            themeMode: appThemeState.themeMode,
+            routerConfig: AppRouter.router,
+          ),
         );
       },
     );

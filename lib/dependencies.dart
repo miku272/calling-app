@@ -6,6 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import './core/services/sf_service.dart';
 import './core/cubits/app_theme/app_theme_cubit.dart';
 
+import './features/auth/data/datasources/auth_remote_datasource.dart';
+import './features/auth/data/repositories/auth_repository_impl.dart';
+import './features/auth/domain/repositories/auth_repository.dart';
+import './features/auth/domain/usecases/send_otp.dart';
+import './features/auth/domain/usecases/verify_otp.dart';
+import './features/auth/presentation/bloc/auth_bloc.dart';
+
 final getIt = GetIt.instance;
 
 Future<void> initDependencies() async {
@@ -13,6 +20,7 @@ Future<void> initDependencies() async {
   _initFirebaseServices();
 
   _initAppTheme();
+  _initAuth();
 }
 
 Future<void> _initSfService() async {
@@ -24,16 +32,39 @@ Future<void> _initSfService() async {
   );
 }
 
-void _initAppTheme() {
-  getIt.registerLazySingleton<AppThemeCubit>(
-    () => AppThemeCubit(sfService: getIt<SfService>()),
-  );
-}
-
 void _initFirebaseServices() {
   final firebaseAuth = FirebaseAuth.instance;
   getIt.registerLazySingleton<FirebaseAuth>(() => firebaseAuth);
 
   final firebaseFirestore = FirebaseFirestore.instance;
   getIt.registerLazySingleton<FirebaseFirestore>(() => firebaseFirestore);
+}
+
+void _initAppTheme() {
+  getIt.registerLazySingleton<AppThemeCubit>(
+    () => AppThemeCubit(sfService: getIt<SfService>()),
+  );
+}
+
+void _initAuth() {
+  getIt.registerFactory<AuthRemoteDatasource>(
+    () => AuthRemoteDatasourceImpl(firebaseAuth: getIt<FirebaseAuth>()),
+  );
+
+  getIt.registerFactory<AuthRepository>(
+    () =>
+        AuthRepositoryImpl(authRemoteDatasource: getIt<AuthRemoteDatasource>()),
+  );
+
+  getIt.registerFactory<SendOtp>(
+    () => SendOtp(authRepository: getIt<AuthRepository>()),
+  );
+
+  getIt.registerFactory<VerifyOtp>(
+    () => VerifyOtp(authRepository: getIt<AuthRepository>()),
+  );
+
+  getIt.registerLazySingleton<AuthBloc>(
+    () => AuthBloc(sendOtp: getIt<SendOtp>(), verifyOtp: getIt<VerifyOtp>()),
+  );
 }
