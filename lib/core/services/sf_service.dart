@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SfService {
   final SharedPreferences _prefs;
 
+  static const String _localizationKey = 'localization';
   static const String _themeKey = 'theme_mode';
 
   SfService({required SharedPreferences sharedPreferences})
@@ -29,5 +30,19 @@ class SfService {
 
   Future<bool> clearThemeMode() async {
     return await _prefs.remove(_themeKey);
+  }
+
+  Future<void> saveLocalization(Locale locale) async {
+    await _prefs.setString(_localizationKey, locale.languageCode);
+  }
+
+  Locale getLocalization() {
+    final localeLanguageCode = _prefs.getString(_localizationKey);
+
+    return Locale(localeLanguageCode ?? 'en');
+  }
+
+  Future<bool> clearLocalization() async {
+    return await _prefs.remove(_localizationKey);
   }
 }

@@ -11,6 +11,7 @@ import './app_router.dart';
 
 import './core/themes/light_theme.dart';
 import './core/themes/dark_theme.dart';
+import './core/cubits/app_localization/app_localization_cubit.dart';
 import './core/cubits/app_theme/app_theme_cubit.dart';
 
 import './features/auth/presentation/bloc/auth_bloc.dart';
@@ -21,12 +22,16 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await initDependencies();
 
+  final appLocalizationCubit = getIt<AppLocalizationCubit>();
+  appLocalizationCubit.loadLocalization();
+
   final appThemeCubit = getIt<AppThemeCubit>();
   appThemeCubit.loadThemeMode();
 
   runApp(
     MultiBlocProvider(
       providers: [
+        BlocProvider.value(value: appLocalizationCubit),
         BlocProvider.value(value: appThemeCubit),
         BlocProvider(create: (context) => getIt<AuthBloc>()),
       ],
@@ -40,29 +45,34 @@ class CallingApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppThemeCubit, AppThemeState>(
-      builder: (context, appThemeState) {
-        return ScreenUtilInit(
-          designSize: const Size(375, 812),
-          minTextAdapt: true,
-          splitScreenMode: true,
-          builder: (context, child) => MaterialApp.router(
-            title: 'Calling App',
-            debugShowCheckedModeBanner: false,
-            localizationsDelegates: const [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-              AppLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('en', ''), // English
-            ],
-            theme: LightTheme.theme,
-            darkTheme: DarkTheme.theme,
-            themeMode: appThemeState.themeMode,
-            routerConfig: AppRouter.router,
-          ),
+    return BlocBuilder<AppLocalizationCubit, AppLocalizationState>(
+      builder: (context, appLocalizationState) {
+        return BlocBuilder<AppThemeCubit, AppThemeState>(
+          builder: (context, appThemeState) {
+            return ScreenUtilInit(
+              designSize: const Size(375, 812),
+              minTextAdapt: true,
+              splitScreenMode: true,
+              builder: (context, child) => MaterialApp.router(
+                title: 'Calling App',
+                debugShowCheckedModeBanner: false,
+                localizationsDelegates: const [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                  AppLocalizations.delegate,
+                ],
+                supportedLocales: const [
+                  Locale('en'), // English
+                ],
+                locale: appLocalizationState.locale,
+                theme: LightTheme.theme,
+                darkTheme: DarkTheme.theme,
+                themeMode: appThemeState.themeMode,
+                routerConfig: AppRouter.router,
+              ),
+            );
+          },
         );
       },
     );

@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import './core/services/sf_service.dart';
+import './core/cubits/app_localization/app_localization_cubit.dart';
 import './core/cubits/app_theme/app_theme_cubit.dart';
 
 import './features/auth/data/datasources/auth_remote_datasource.dart';
@@ -19,6 +20,7 @@ Future<void> initDependencies() async {
   await _initSfService();
   _initFirebaseServices();
 
+  _initAppLocalization();
   _initAppTheme();
   _initAuth();
 }
@@ -38,6 +40,12 @@ void _initFirebaseServices() {
 
   final firebaseFirestore = FirebaseFirestore.instance;
   getIt.registerLazySingleton<FirebaseFirestore>(() => firebaseFirestore);
+}
+
+void _initAppLocalization() {
+  getIt.registerLazySingleton<AppLocalizationCubit>(
+    () => AppLocalizationCubit(sfService: getIt<SfService>()),
+  );
 }
 
 void _initAppTheme() {
