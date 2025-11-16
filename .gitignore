@@ -30,6 +30,11 @@ migrate_working_dir/
 **/*.g.dart
 **/*.freezed.dart
 
+#localization files
+lib/l10n/*.dart
+flutter_gen/
+.gen/
+
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id

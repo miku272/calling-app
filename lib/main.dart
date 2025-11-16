@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import './l10n/app_localizations.dart';
 import './firebase_options.dart';
 import './dependencies.dart';
 import './app_router.dart';
@@ -47,6 +49,15 @@ class CallingApp extends StatelessWidget {
           builder: (context, child) => MaterialApp.router(
             title: 'Calling App',
             debugShowCheckedModeBanner: false,
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              AppLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en', ''), // English
+            ],
             theme: LightTheme.theme,
             darkTheme: DarkTheme.theme,
             themeMode: appThemeState.themeMode,
