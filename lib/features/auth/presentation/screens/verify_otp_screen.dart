@@ -94,7 +94,11 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
       child: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is OtpVerified) {
-            context.go('/');
+            if (state.verifyOtpResult.isNewUser) {
+              context.go('/new-user');
+            } else {
+              context.go('/');
+            }
           }
 
           if (state is VerifyOtpFailure) {

@@ -17,3 +17,10 @@ final class VerifyOtpEvent extends AuthEvent {
 
   VerifyOtpEvent({this.verificationId, this.smsCode, this.autoCredential});
 }
+
+final class UpdateDisplayNameAndPhotoUrlEvent extends AuthEvent {
+  final String displayName;
+  final String? photoUrl;
+
+  UpdateDisplayNameAndPhotoUrlEvent({required this.displayName, this.photoUrl});
+}

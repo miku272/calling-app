@@ -3,13 +3,18 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/phone_auth_result.dart';
+import '../models/verify_otp_result.dart';
 
 abstract interface class AuthRemoteDatasource {
   Future<PhoneAuthResult> sendOtp(String phoneNumber, {int? resendToken});
-  Future<UserCredential> verifyOtp({
+  Future<VerifyOtpResult> verifyOtp({
     String? verificationId,
     String? smsCode,
     PhoneAuthCredential? autoCredential,
+  });
+  Future<void> updateDisplayNameAndPhotoUrl({
+    required String displayName,
+    String? photoUrl,
   });
 }
 
@@ -29,7 +34,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
 
       await _firebaseAuth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
-        timeout: const Duration(seconds: 60),
+        timeout: const Duration(seconds: 120),
         forceResendingToken: resendToken,
         verificationCompleted: (PhoneAuthCredential credential) async {
           if (!completer.isCompleted) {
@@ -67,7 +72,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   }
 
   @override
-  Future<UserCredential> verifyOtp({
+  Future<VerifyOtpResult> verifyOtp({
     String? verificationId,
     String? smsCode,
     PhoneAuthCredential? autoCredential,
@@ -78,7 +83,12 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
           autoCredential,
         );
 
-        return userCredential;
+        final isNewUser = userCredential.user?.displayName == null;
+
+        return VerifyOtpResult(
+          userCredential: userCredential,
+          isNewUser: isNewUser,
+        );
       }
 
       if (verificationId != null && smsCode != null) {
@@ -91,12 +101,41 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
           credential,
         );
 
-        return userCredential;
+        final isNewUser = userCredential.user?.displayName == null;
+
+        return VerifyOtpResult(
+          userCredential: userCredential,
+          isNewUser: isNewUser,
+        );
       }
 
       throw Exception(
         'Either the credential is null or the verification id and sms code are null',
       );
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateDisplayNameAndPhotoUrl({
+    required String displayName,
+    String? photoUrl,
+  }) async {
+    try {
+      final user = _firebaseAuth.currentUser;
+
+      if (user != null) {
+        await user.updateDisplayName(displayName);
+
+        if (photoUrl != null) {
+          await user.updatePhotoURL(photoUrl);
+        }
+
+        await user.reload();
+      } else {
+        throw Exception('No authenticated user found.');
+      }
     } catch (error) {
       rethrow;
     }

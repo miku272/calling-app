@@ -35,9 +35,9 @@ final class SendOtpFailure extends AuthState {
 final class VerifyOtpLoading extends AuthState {}
 
 final class OtpVerified extends AuthState {
-  final UserCredential userCredential;
+  final VerifyOtpResult verifyOtpResult;
 
-  OtpVerified(this.userCredential);
+  OtpVerified(this.verifyOtpResult);
 }
 
 final class VerifyOtpFailure extends AuthState {
@@ -46,6 +46,22 @@ final class VerifyOtpFailure extends AuthState {
   final String message;
 
   VerifyOtpFailure({
+    this.statusCode,
+    this.firebaseErrorCode,
+    required this.message,
+  });
+}
+
+final class DisplayNameAndPhotoUrlUpdateLoading extends AuthState {}
+
+final class DisplayNameAndPhotoUrlSuccess extends AuthState {}
+
+final class DisplayNameAndPhotoUrlFailure extends AuthState {
+  final int? statusCode;
+  final String? firebaseErrorCode;
+  final String message;
+
+  DisplayNameAndPhotoUrlFailure({
     this.statusCode,
     this.firebaseErrorCode,
     required this.message,

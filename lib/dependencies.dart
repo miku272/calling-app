@@ -12,6 +12,7 @@ import './features/auth/data/repositories/auth_repository_impl.dart';
 import './features/auth/domain/repositories/auth_repository.dart';
 import './features/auth/domain/usecases/send_otp.dart';
 import './features/auth/domain/usecases/verify_otp.dart';
+import './features/auth/domain/usecases/update_display_name_and_photo_url.dart';
 import './features/auth/presentation/bloc/auth_bloc.dart';
 
 final getIt = GetIt.instance;
@@ -72,7 +73,15 @@ void _initAuth() {
     () => VerifyOtp(authRepository: getIt<AuthRepository>()),
   );
 
+  getIt.registerFactory<UpdateDisplayNameAndPhotoUrl>(
+    () => UpdateDisplayNameAndPhotoUrl(authRepository: getIt<AuthRepository>()),
+  );
+
   getIt.registerLazySingleton<AuthBloc>(
-    () => AuthBloc(sendOtp: getIt<SendOtp>(), verifyOtp: getIt<VerifyOtp>()),
+    () => AuthBloc(
+      sendOtp: getIt<SendOtp>(),
+      verifyOtp: getIt<VerifyOtp>(),
+      updateDisplayNameAndPhotoUrl: getIt<UpdateDisplayNameAndPhotoUrl>(),
+    ),
   );
 }

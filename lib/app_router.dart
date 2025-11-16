@@ -5,32 +5,46 @@ import './dependencies.dart';
 
 import './core/screens/not_found_screen.dart';
 
+import './features/splash/presentation/screens/splash_screen.dart';
 import './features/auth/presentation/screens/enter_number_screen.dart';
 import './features/auth/presentation/screens/verify_otp_screen.dart';
+import './features/auth/presentation/screens/new_user_screen.dart';
 import './features/home/presentation/screens/home_screen.dart';
 
 class AppRouter {
   static final router = GoRouter(
     redirect: (context, state) {
-      final isLoggedIn = getIt<FirebaseAuth>().currentUser != null;
+      if (state.fullPath == '/splash') {
+        return null;
+      }
 
-      if (!isLoggedIn &&
-          state.fullPath != '/enter-number' &&
-          state.fullPath != '/verify-otp') {
+      final isLoggedIn = getIt<FirebaseAuth>().currentUser != null;
+      final currentUser = getIt<FirebaseAuth>().currentUser;
+
+      // Allow these paths when not logged in
+      const publicPaths = ['/enter-number', '/verify-otp', '/new-user'];
+
+      // If not logged in and trying to access protected route
+      if (!isLoggedIn && !publicPaths.contains(state.matchedLocation)) {
         return '/enter-number';
       }
 
+      // If logged in with display name set, prevent access to auth screens
       if (isLoggedIn &&
-          (state.fullPath == '/enter-number' ||
-              state.fullPath == '/verify-otp')) {
+          currentUser?.displayName != null &&
+          publicPaths.contains(state.matchedLocation)) {
         return '/';
       }
 
       return null;
     },
-    initialLocation: '/',
+    initialLocation: '/splash',
     errorBuilder: (context, state) => const NotFoundScreen(),
     routes: [
+      GoRoute(
+        path: '/splash',
+        builder: (context, state) => const SplashScreen(),
+      ),
       GoRoute(
         path: '/enter-number',
         builder: (context, state) => const EnterNumberScreen(),
@@ -55,6 +69,10 @@ class AppRouter {
             resendCode: int.tryParse(resendToken ?? ''),
           );
         },
+      ),
+      GoRoute(
+        path: '/new-user',
+        builder: (context, state) => const NewUserScreen(),
       ),
       GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
     ],

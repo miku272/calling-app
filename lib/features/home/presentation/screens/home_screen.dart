@@ -8,7 +8,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userId = FirebaseAuth.instance.currentUser?.uid;
+    final userId = FirebaseAuth.instance.currentUser?.displayName;
 
     return Scaffold(
       body: Center(
@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'User ID is: $userId',
+              'User Name is: $userId',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w600),
             ),
