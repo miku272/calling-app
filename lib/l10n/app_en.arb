@@ -3,5 +3,61 @@
   "appName": "Calling App",
   "@appName": {
     "description": "The name of the application"
+  },
+  "enterYour": "Enter your",
+  "@enterYour": {
+    "description": "The first text line of the enter_number_screen"
+  },
+  "phoneNumber": "phone number",
+  "@phoneNumber": {
+    "description": "The second text line of the enter_number_screen"
+  },
+  "verificationWillBeSentInfoText": "We'll send you a verification code",
+  "@verificationWillBeSentInfoText": {
+    "description": "Notifiying the users that verification code will be sent"
+  },
+  "continueText": "Continue",
+  "@continueText": {
+    "description": "Notifying to continue"
+  },
+  "safeAndSecure": "Your information is secure and encrypted",
+  "@safeAndSecure": {
+    "description": "Text telling the users about safety and security"
+  },
+  "enterText": "Enter",
+  "@enterText": {
+    "description": "Notifying to enter"
+  },
+  "verificationCodeText": "verification code",
+  "@verificationCodeText": {
+    "description": "Text notifying to enter the verification code"
+  },
+  "codeSentToPhone": "We've sent a 6-digit code to your phone number",
+  "@codeSentToPhone": {
+    "description": "Notyfying that the code was sent to the phone number"
+  },
+  "resendButtonText": "Didn't receive code? Resend",
+  "@resendButtonText": {
+    "description": "Resend button text"
+  },
+  "verifyText": "Verify",
+  "@verifyText": {
+    "description": "verify text"
+  },
+  "provideCorrectPin": "Please provide correct PIN",
+  "@provideCorrectPin": {
+    "description": "Asking user to provide correct pin"
+  },
+  "phoneNumberCannotBeEmpty": "Phone number cannot be empty",
+  "@phoneNumberCannotBeEmpty": {
+    "description": "Notifying users that phone number cannot be empty"
+  },
+  "phoneNumberMustBe10Digits": "Phone number must be 10 digits long",
+  "@phoneNumberMustBe10Digits": {
+    "description": "Notifying users about phone number length"
+  },
+  "searchCountry": "Search country",
+  "@searchCountry": {
+    "description": "Notifying users to search the country"
   }
 }

@@ -5,9 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/widgets/country_code_widget.dart';
+import '../../../../l10n/app_localizations.dart';
 
+import '../../../../core/widgets/country_code_widget.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
+
 import '../bloc/auth_bloc.dart';
 import '../widgets/phone_number_field.dart';
 
@@ -68,6 +70,8 @@ class _EnterNumberScreenState extends State<EnterNumberScreen>
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -120,14 +124,14 @@ class _EnterNumberScreenState extends State<EnterNumberScreen>
                               children: <Widget>[
                                 SizedBox(height: 10.h),
                                 Text(
-                                  'Enter your',
+                                  appLocalizations.enterYour,
                                   style: Theme.of(context)
                                       .textTheme
                                       .headlineLarge
                                       ?.copyWith(fontWeight: FontWeight.w300),
                                 ),
                                 Text(
-                                  'phone number',
+                                  appLocalizations.phoneNumber,
                                   style: Theme.of(context)
                                       .textTheme
                                       .headlineLarge
@@ -140,7 +144,7 @@ class _EnterNumberScreenState extends State<EnterNumberScreen>
                           SlideTransition(
                             position: _slideAnimation,
                             child: Text(
-                              'We\'ll send you a verification code',
+                              appLocalizations.verificationWillBeSentInfoText,
                               style: Theme.of(context).textTheme.bodyLarge
                                   ?.copyWith(
                                     color: Theme.of(
@@ -194,9 +198,9 @@ class _EnterNumberScreenState extends State<EnterNumberScreen>
                                         : const Icon(
                                             Icons.arrow_forward_rounded,
                                           ),
-                                    label: const Text(
-                                      'Continue',
-                                      style: TextStyle(
+                                    label: Text(
+                                      appLocalizations.continueText,
+                                      style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
                                         letterSpacing: 0.5,
@@ -225,7 +229,7 @@ class _EnterNumberScreenState extends State<EnterNumberScreen>
                                   SizedBox(width: 8.w),
                                   Flexible(
                                     child: Text(
-                                      'Your information is secure and encrypted',
+                                      appLocalizations.safeAndSecure,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodySmall

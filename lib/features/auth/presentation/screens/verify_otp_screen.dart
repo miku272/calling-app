@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
 
 import '../bloc/auth_bloc.dart';
@@ -68,7 +69,10 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
 
   void _onSubmit() {
     if (_pinController.text.isEmpty || _pinController.text.length < 6) {
-      CustomSnackbar.error(context, 'Please provide correct pin');
+      CustomSnackbar.error(
+        context,
+        AppLocalizations.of(context)!.provideCorrectPin,
+      );
 
       return;
     }
@@ -83,6 +87,8 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: BlocConsumer<AuthBloc, AuthState>(
@@ -115,12 +121,12 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Enter',
+                              appLocalizations.enterText,
                               style: Theme.of(context).textTheme.headlineLarge
                                   ?.copyWith(fontWeight: FontWeight.w300),
                             ),
                             Text(
-                              'verification code',
+                              appLocalizations.verificationCodeText,
                               style: Theme.of(context).textTheme.headlineLarge
                                   ?.copyWith(fontWeight: FontWeight.bold),
                             ),
@@ -134,7 +140,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
                       child: SlideTransition(
                         position: _slideAnimation,
                         child: Text(
-                          'We\'ve sent a 6-digit code to your phone number',
+                          appLocalizations.codeSentToPhone,
                           style: Theme.of(context).textTheme.bodyLarge
                               ?.copyWith(
                                 color: Theme.of(
@@ -174,7 +180,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
                                     debugPrint('Resend code tapped');
                                   },
                             child: Text(
-                              'Didn\'t receive code? Resend',
+                              appLocalizations.resendButtonText,
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w500,
@@ -204,9 +210,9 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
                                   child: CircularProgressIndicator(),
                                 )
                               : const Icon(Icons.check_circle_outline_rounded),
-                          label: const Text(
-                            'Verify',
-                            style: TextStyle(
+                          label: Text(
+                            appLocalizations.verifyText,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.5,

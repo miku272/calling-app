@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/app_localizations.dart';
+
 class PhoneNumberField extends StatelessWidget {
   final TextEditingController? phoneNumberController;
   final bool isEnabled;
@@ -12,24 +14,27 @@ class PhoneNumberField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+
     return TextFormField(
       controller: phoneNumberController,
       enabled: isEnabled,
       keyboardType: TextInputType.phone,
       maxLength: 10,
       maxLines: 1,
-      decoration: const InputDecoration(
-        label: Text('Phone Number'),
-        hintText: 'Enter your phone number',
+      decoration: InputDecoration(
+        label: Text(appLocalizations.phoneNumber),
+        hintText:
+            '${appLocalizations.enterYour} ${appLocalizations.phoneNumber}',
         counterText: '',
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Phone number cannot be empty';
+          return appLocalizations.phoneNumberCannotBeEmpty;
         }
 
         if (value.length < 10 || value.length > 10) {
-          return 'Phone number must be 10 digits long';
+          return appLocalizations.phoneNumberMustBe10Digits;
         }
 
         return null;

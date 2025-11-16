@@ -47,6 +47,8 @@ class CallingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AppLocalizationCubit, AppLocalizationState>(
       builder: (context, appLocalizationState) {
+        final appLocalizations = AppLocalizations.of(context);
+
         return BlocBuilder<AppThemeCubit, AppThemeState>(
           builder: (context, appThemeState) {
             return ScreenUtilInit(
@@ -54,7 +56,7 @@ class CallingApp extends StatelessWidget {
               minTextAdapt: true,
               splitScreenMode: true,
               builder: (context, child) => MaterialApp.router(
-                title: 'Calling App',
+                title: appLocalizations?.appName ?? 'Calling App',
                 debugShowCheckedModeBanner: false,
                 localizationsDelegates: const [
                   GlobalMaterialLocalizations.delegate,

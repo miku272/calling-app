@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 
+import '../../l10n/app_localizations.dart';
+
 class CountryCodeWidget extends StatefulWidget {
   final ValueChanged<CountryCode>? onChanged;
   final String? initialSelection;
@@ -21,6 +23,7 @@ class _CountryCodeWidgetState extends State<CountryCodeWidget> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.sizeOf(context);
+    final appLocalizations = AppLocalizations.of(context)!;
 
     return CountryCodePicker(
       onChanged: widget.onChanged,
@@ -32,9 +35,9 @@ class _CountryCodeWidgetState extends State<CountryCodeWidget> {
       textStyle: Theme.of(context).textTheme.bodyLarge,
       dialogTextStyle: Theme.of(context).textTheme.bodyMedium,
       searchStyle: Theme.of(context).textTheme.bodyMedium,
-      searchDecoration: const InputDecoration(
-        hintText: 'Search country',
-        prefixIcon: Icon(Icons.search),
+      searchDecoration: InputDecoration(
+        hintText: appLocalizations.searchCountry,
+        prefixIcon: const Icon(Icons.search),
       ),
       topBarPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       dialogItemPadding: const EdgeInsets.symmetric(
