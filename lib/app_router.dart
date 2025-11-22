@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 
 import './dependencies.dart';
+import './shell_scaffold.dart';
 
 import './core/screens/not_found_screen.dart';
+import './core/screens/placeholder_screen.dart';
 
 import './features/splash/presentation/screens/splash_screen.dart';
 import './features/auth/presentation/screens/enter_number_screen.dart';
@@ -74,7 +76,29 @@ class AppRouter {
         path: '/new-user',
         builder: (context, state) => const NewUserScreen(),
       ),
-      GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
+      ShellRoute(
+        builder: (context, state, child) {
+          return ShellScaffold(state: state, child: child);
+        },
+        routes: [
+          GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
+          GoRoute(
+            path: '/calls',
+            builder: (context, state) =>
+                const PlaceholderScreen(title: 'Calls'),
+          ),
+          GoRoute(
+            path: '/people',
+            builder: (context, state) =>
+                const PlaceholderScreen(title: 'People'),
+          ),
+          GoRoute(
+            path: '/settings',
+            builder: (context, state) =>
+                const PlaceholderScreen(title: 'Settings'),
+          ),
+        ],
+      ),
     ],
   );
 }

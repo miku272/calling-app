@@ -4,6 +4,22 @@
   "@appName": {
     "description": "The name of the application"
   },
+  "chats": "Chats",
+  "@chats": {
+    "description": "chat word text"
+  },
+  "calls": "Calls",
+  "@calls": {
+    "description": "calls word text"
+  },
+  "contacts": "Contacts",
+  "@contacts": {
+    "description": "contacts word text"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "settings word text"
+  },
   "enterYour": "Enter your",
   "@enterYour": {
     "description": "The first text line of the enter_number_screen"
