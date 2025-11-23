@@ -19,6 +19,23 @@ import './core/cubits/app_user/app_user_cubit.dart';
 import './features/auth/presentation/bloc/auth_bloc.dart';
 import 'core/widgets/custom_snackbar.dart';
 
+/// Entry point of the Calling App application.
+///
+/// Performs the following initialization steps:
+/// 1. Initializes Flutter bindings
+/// 2. Initializes Firebase with platform-specific configuration
+/// 3. Sets up dependency injection container (GetIt)
+/// 4. Loads user preferences (localization and theme)
+/// 5. Configures BLoC providers for state management
+/// 6. Sets up user session listener for automatic logout
+/// 7. Launches the app
+///
+/// The app uses:
+/// - **Firebase** for authentication and data storage
+/// - **BLoC pattern** for state management
+/// - **GetIt** for dependency injection
+/// - **GoRouter** for navigation
+/// - **ScreenUtil** for responsive design
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -61,6 +78,16 @@ Future<void> main() async {
   );
 }
 
+/// Root widget of the Calling App.
+///
+/// Configures the MaterialApp with:
+/// - **Localization**: Supports multiple languages (currently English)
+/// - **Theming**: Light and dark theme support with user preference
+/// - **Responsive design**: Uses ScreenUtil for adaptive layouts
+/// - **Routing**: GoRouter for declarative navigation
+///
+/// The widget rebuilds when localization or theme settings change,
+/// ensuring the app always reflects user preferences.
 class CallingApp extends StatelessWidget {
   const CallingApp({super.key});
 
@@ -102,6 +129,12 @@ class CallingApp extends StatelessWidget {
   }
 }
 
+/// Resets the authentication state to initial/logout state.
+///
+/// This function clears the bloc/cubit states, typically used
+/// when the user logs out or when the session needs to be reset.
+///
+/// Note: Firebase Auth signout is handled automatically by [AppUserCubit.removeAppUser].
 void resetStates(BuildContext context) {
   context.read<AuthBloc>().add(AuthResetEvent());
 }

@@ -18,6 +18,27 @@ import './features/auth/presentation/bloc/auth_bloc.dart';
 
 final getIt = GetIt.instance;
 
+/// Initializes all application dependencies using GetIt service locator.
+///
+/// This function must be called during app startup before any services are used.
+/// It sets up the dependency injection container with all required services,
+/// cubits, repositories, and use cases.
+///
+/// The initialization order is important:
+/// 1. SharedPreferences and SfService (required by other services)
+/// 2. Firebase services (Auth and Firestore)
+/// 3. App-level cubits (Localization, Theme, User)
+/// 4. Feature-specific dependencies (Auth flow)
+///
+/// Example usage:
+/// ```dart
+/// Future<void> main() async {
+///   WidgetsFlutterBinding.ensureInitialized();
+///   await Firebase.initializeApp();
+///   await initDependencies();
+///   runApp(MyApp());
+/// }
+/// ```
 Future<void> initDependencies() async {
   await _initSfService();
   _initFirebaseServices();

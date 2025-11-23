@@ -15,8 +15,45 @@ import './features/home/presentation/screens/home_screen.dart';
 
 import './features/settings/presentation/screens/settings_screen.dart';
 
+/// Central router configuration for the application.
+///
+/// This class defines all routes and navigation logic using GoRouter.
+/// It handles authentication-based route guards and navigation flow.
 class AppRouter {
+  /// The main GoRouter instance for the application.
+  ///
+  /// Features:
+  /// - **Authentication guards**: Redirects unauthenticated users to login
+  /// - **Public routes**: `/enter-number`, `/verify-otp`, `/new-user`
+  /// - **Protected routes**: All other routes require authentication
+  /// - **Shell routes**: Authenticated screens with bottom navigation
+  /// - **Initial route**: `/splash` for app initialization
+  ///
+  /// Route structure:
+  /// ```
+  /// /splash              - Initial splash screen
+  /// /enter-number        - Phone number entry (public)
+  /// /verify-otp          - OTP verification (public)
+  /// /new-user            - New user profile setup (public)
+  /// /                    - Home screen (protected, with shell)
+  /// /calls               - Calls screen (protected, with shell)
+  /// /people              - People/contacts screen (protected, with shell)
+  /// /settings            - Settings screen (protected, with shell)
+  /// ```
+  ///
+  /// The router automatically:
+  /// - Redirects unauthenticated users to `/enter-number`
+  /// - Prevents authenticated users from accessing auth screens
+  /// - Shows a 404 screen for unknown routes
   static final router = GoRouter(
+    /// Global redirect logic for authentication-based navigation.
+    ///
+    /// Handles route guards to protect authenticated routes and prevent
+    /// authenticated users from accessing public auth screens.
+    ///
+    /// Returns:
+    /// - `null` to allow navigation to the requested route
+    /// - A redirect path to navigate to a different route
     redirect: (context, state) {
       if (state.fullPath == '/splash') {
         return null;
