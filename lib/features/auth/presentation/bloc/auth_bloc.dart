@@ -94,7 +94,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ),
       (verifyOtpResult) {
         if (verifyOtpResult.userModel != null) {
-          _appUserCubit.updateAppUser(verifyOtpResult.userModel!);
+          _appUserCubit.startUserStream(verifyOtpResult.userModel!.uid);
         }
 
         emit(OtpVerified(verifyOtpResult));
@@ -124,7 +124,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       ),
       (userModel) {
-        _appUserCubit.updateAppUser(userModel);
+        _appUserCubit.startUserStream(userModel.uid);
 
         emit(DisplayNameAndPhotoUrlSuccess());
       },

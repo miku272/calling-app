@@ -58,7 +58,12 @@ void _initAppTheme() {
 }
 
 void _initAppUser() {
-  getIt.registerLazySingleton<AppUserCubit>(() => AppUserCubit());
+  getIt.registerLazySingleton<AppUserCubit>(
+    () => AppUserCubit(
+      firestore: getIt<FirebaseFirestore>(),
+      firebaseAuth: getIt<FirebaseAuth>(),
+    ),
+  );
 }
 
 void _initAuth() {
