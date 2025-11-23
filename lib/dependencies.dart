@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import './core/services/sf_service.dart';
 import './core/cubits/app_localization/app_localization_cubit.dart';
 import './core/cubits/app_theme/app_theme_cubit.dart';
+import './core/cubits/app_user/app_user_cubit.dart';
 
 import './features/auth/data/datasources/auth_remote_datasource.dart';
 import './features/auth/data/repositories/auth_repository_impl.dart';
@@ -23,6 +24,7 @@ Future<void> initDependencies() async {
 
   _initAppLocalization();
   _initAppTheme();
+  _initAppUser();
   _initAuth();
 }
 
@@ -55,6 +57,10 @@ void _initAppTheme() {
   );
 }
 
+void _initAppUser() {
+  getIt.registerLazySingleton<AppUserCubit>(() => AppUserCubit());
+}
+
 void _initAuth() {
   getIt.registerFactory<AuthRemoteDatasource>(
     () => AuthRemoteDatasourceImpl(
@@ -82,6 +88,7 @@ void _initAuth() {
 
   getIt.registerLazySingleton<AuthBloc>(
     () => AuthBloc(
+      appUserCubit: getIt<AppUserCubit>(),
       sendOtp: getIt<SendOtp>(),
       verifyOtp: getIt<VerifyOtp>(),
       updateDisplayNameAndPhotoUrl: getIt<UpdateDisplayNameAndPhotoUrl>(),

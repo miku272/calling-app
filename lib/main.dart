@@ -13,6 +13,7 @@ import './core/themes/light_theme.dart';
 import './core/themes/dark_theme.dart';
 import './core/cubits/app_localization/app_localization_cubit.dart';
 import './core/cubits/app_theme/app_theme_cubit.dart';
+import './core/cubits/app_user/app_user_cubit.dart';
 
 import './features/auth/presentation/bloc/auth_bloc.dart';
 
@@ -33,9 +34,13 @@ Future<void> main() async {
       providers: [
         BlocProvider.value(value: appLocalizationCubit),
         BlocProvider.value(value: appThemeCubit),
+        BlocProvider(create: (context) => getIt<AppUserCubit>()),
         BlocProvider(create: (context) => getIt<AuthBloc>()),
       ],
-      child: const CallingApp(),
+      child: BlocListener<AppUserCubit, AppUserState>(
+        listener: (context, state) => resetStates(context),
+        child: const CallingApp(),
+      ),
     ),
   );
 }
@@ -79,4 +84,8 @@ class CallingApp extends StatelessWidget {
       },
     );
   }
+}
+
+void resetStates(BuildContext context) {
+  context.read<AuthBloc>().add(AuthResetEvent());
 }

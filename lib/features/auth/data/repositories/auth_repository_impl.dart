@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/errors/failure.dart';
+import '../../../../core/models/user_model.dart';
 
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_datasource.dart';
@@ -65,17 +66,18 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> updateDisplayNameAndPhotoUrl({
+  Future<Either<Failure, UserModel>> updateDisplayNameAndPhotoUrl({
     required String displayName,
     String? photoUrl,
   }) async {
     try {
-      await _authRemoteDatasource.updateDisplayNameAndPhotoUrl(
-        displayName: displayName,
-        photoUrl: photoUrl,
-      );
+      final userModel = await _authRemoteDatasource
+          .updateDisplayNameAndPhotoUrl(
+            displayName: displayName,
+            photoUrl: photoUrl,
+          );
 
-      return right(null);
+      return right(userModel);
     } on FirebaseException catch (e) {
       return left(
         Failure(

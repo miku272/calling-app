@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/cubits/app_user/app_user_cubit.dart';
+
 import '../../data/models/verify_otp_result.dart';
 import '../../domain/usecases/send_otp.dart';
 import '../../domain/usecases/update_display_name_and_photo_url.dart';
@@ -11,18 +13,24 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  final AppUserCubit _appUserCubit;
+
   final SendOtp _sendOtp;
   final VerifyOtp _verifyOtp;
   final UpdateDisplayNameAndPhotoUrl _updateDisplayNameAndPhotoUrl;
 
   AuthBloc({
+    required AppUserCubit appUserCubit,
     required SendOtp sendOtp,
     required VerifyOtp verifyOtp,
     required UpdateDisplayNameAndPhotoUrl updateDisplayNameAndPhotoUrl,
-  }) : _sendOtp = sendOtp,
+  }) : _appUserCubit = appUserCubit,
+       _sendOtp = sendOtp,
        _verifyOtp = verifyOtp,
        _updateDisplayNameAndPhotoUrl = updateDisplayNameAndPhotoUrl,
        super(AuthInitial()) {
+    on<AuthResetEvent>((event, emit) => emit(AuthInitial()));
+
     on<SendOtpEvent>(_onSendOtp);
     on<VerifyOtpEvent>(_onVerifyOtp);
     on<UpdateDisplayNameAndPhotoUrlEvent>(_onUpdateDisplayNameAndPhotoUrl);
@@ -84,8 +92,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           message: failure.message,
         ),
       ),
-      (userCredential) {
-        emit(OtpVerified(userCredential));
+      (verifyOtpResult) {
+        if (verifyOtpResult.userModel != null) {
+          _appUserCubit.updateAppUser(verifyOtpResult.userModel!);
+        }
+
+        emit(OtpVerified(verifyOtpResult));
       },
     );
   }
@@ -111,7 +123,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           message: failure.message,
         ),
       ),
-      (_) => emit(DisplayNameAndPhotoUrlSuccess()),
+      (userModel) {
+        _appUserCubit.updateAppUser(userModel);
+
+        emit(DisplayNameAndPhotoUrlSuccess());
+      },
     );
   }
 }

@@ -15,7 +15,7 @@ abstract interface class AuthRemoteDatasource {
     String? smsCode,
     PhoneAuthCredential? autoCredential,
   });
-  Future<void> updateDisplayNameAndPhotoUrl({
+  Future<UserModel> updateDisplayNameAndPhotoUrl({
     required String displayName,
     String? photoUrl,
   });
@@ -86,6 +86,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   }) async {
     try {
       UserCredential userCredential;
+      UserModel? userModel;
 
       if (autoCredential != null) {
         userCredential = await _firebaseAuth.signInWithCredential(
@@ -108,11 +109,18 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
 
       if (user != null) {
         await _syncUserToFirestore(user, createIfNew: isNewUser);
+
+        userModel = await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .get()
+            .then((doc) => UserModel.fromJson(doc.data()!));
       }
 
       return VerifyOtpResult(
         userCredential: userCredential,
         isNewUser: isNewUser,
+        userModel: userModel,
       );
     } catch (error) {
       rethrow;
@@ -120,7 +128,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   }
 
   @override
-  Future<void> updateDisplayNameAndPhotoUrl({
+  Future<UserModel> updateDisplayNameAndPhotoUrl({
     required String displayName,
     String? photoUrl,
   }) async {
@@ -143,6 +151,12 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       } else {
         throw Exception('No authenticated user found.');
       }
+
+      return await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .get()
+          .then((doc) => UserModel.fromJson(doc.data()!));
     } catch (error) {
       rethrow;
     }
