@@ -1,5 +1,7 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,6 +18,7 @@ import './core/cubits/app_theme/app_theme_cubit.dart';
 import './core/cubits/app_user/app_user_cubit.dart';
 
 import './features/auth/presentation/bloc/auth_bloc.dart';
+import 'core/widgets/custom_snackbar.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,7 +41,19 @@ Future<void> main() async {
         BlocProvider(create: (context) => getIt<AuthBloc>()),
       ],
       child: BlocListener<AppUserCubit, AppUserState>(
-        listener: (context, state) => resetStates(context),
+        listener: (context, state) {
+          if (state is AppUserInitial || state.appUser == null) {
+            GoRouter.of(context).refresh();
+
+            CustomSnackbar.error(
+              context,
+              AppLocalizations.of(context)?.loginInAgainMsg ??
+                  'Please log in again.',
+            );
+
+            resetStates(context);
+          }
+        },
         child: const CallingApp(),
       ),
     ),
@@ -86,6 +101,10 @@ class CallingApp extends StatelessWidget {
   }
 }
 
-void resetStates(BuildContext context) {
-  context.read<AuthBloc>().add(AuthResetEvent());
+void resetStates(BuildContext context) async {
+  await getIt<FirebaseAuth>().signOut();
+
+  if (context.mounted) {
+    context.read<AuthBloc>().add(AuthResetEvent());
+  }
 }

@@ -20,6 +20,10 @@
   "@settings": {
     "description": "settings word text"
   },
+  "loginInAgainMsg": "Please log in again.",
+  "@loginInAgainMsg": {
+    "description": "Message shown to user to login again"
+  },
   "enterYour": "Enter your",
   "@enterYour": {
     "description": "The first text line of the enter_number_screen"
