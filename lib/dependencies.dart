@@ -57,7 +57,10 @@ void _initAppTheme() {
 
 void _initAuth() {
   getIt.registerFactory<AuthRemoteDatasource>(
-    () => AuthRemoteDatasourceImpl(firebaseAuth: getIt<FirebaseAuth>()),
+    () => AuthRemoteDatasourceImpl(
+      firebaseAuth: getIt<FirebaseAuth>(),
+      firestore: getIt<FirebaseFirestore>(),
+    ),
   );
 
   getIt.registerFactory<AuthRepository>(

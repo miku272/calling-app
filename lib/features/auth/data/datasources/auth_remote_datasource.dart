@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../../core/models/user_model.dart';
+import '../../../../core/models/user_settings.dart';
 import '../models/phone_auth_result.dart';
 import '../models/verify_otp_result.dart';
 
@@ -20,9 +23,13 @@ abstract interface class AuthRemoteDatasource {
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   final FirebaseAuth _firebaseAuth;
+  final FirebaseFirestore _firestore;
 
-  AuthRemoteDatasourceImpl({required FirebaseAuth firebaseAuth})
-    : _firebaseAuth = firebaseAuth;
+  AuthRemoteDatasourceImpl({
+    required FirebaseAuth firebaseAuth,
+    required FirebaseFirestore firestore,
+  }) : _firebaseAuth = firebaseAuth,
+       _firestore = firestore;
 
   @override
   Future<PhoneAuthResult> sendOtp(
@@ -78,39 +85,34 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
     PhoneAuthCredential? autoCredential,
   }) async {
     try {
+      UserCredential userCredential;
+
       if (autoCredential != null) {
-        final userCredential = await _firebaseAuth.signInWithCredential(
+        userCredential = await _firebaseAuth.signInWithCredential(
           autoCredential,
         );
-
-        final isNewUser = userCredential.user?.displayName == null;
-
-        return VerifyOtpResult(
-          userCredential: userCredential,
-          isNewUser: isNewUser,
-        );
-      }
-
-      if (verificationId != null && smsCode != null) {
+      } else if (verificationId != null && smsCode != null) {
         final credential = PhoneAuthProvider.credential(
           verificationId: verificationId,
           smsCode: smsCode,
         );
-
-        final userCredential = await _firebaseAuth.signInWithCredential(
-          credential,
-        );
-
-        final isNewUser = userCredential.user?.displayName == null;
-
-        return VerifyOtpResult(
-          userCredential: userCredential,
-          isNewUser: isNewUser,
+        userCredential = await _firebaseAuth.signInWithCredential(credential);
+      } else {
+        throw Exception(
+          'Either the credential is null or the verification id and sms code are null',
         );
       }
 
-      throw Exception(
-        'Either the credential is null or the verification id and sms code are null',
+      final isNewUser = userCredential.user?.displayName == null;
+      final user = userCredential.user;
+
+      if (user != null) {
+        await _syncUserToFirestore(user, createIfNew: isNewUser);
+      }
+
+      return VerifyOtpResult(
+        userCredential: userCredential,
+        isNewUser: isNewUser,
       );
     } catch (error) {
       rethrow;
@@ -133,11 +135,53 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
         }
 
         await user.reload();
+        final updatedUser = _firebaseAuth.currentUser;
+
+        if (updatedUser != null) {
+          await _syncUserToFirestore(updatedUser, updateProfile: true);
+        }
       } else {
         throw Exception('No authenticated user found.');
       }
     } catch (error) {
       rethrow;
+    }
+  }
+
+  Future<void> _syncUserToFirestore(
+    User user, {
+    bool createIfNew = false,
+    bool updateProfile = false,
+  }) async {
+    final userDocRef = _firestore.collection('users').doc(user.uid);
+    final userDoc = await userDocRef.get();
+
+    if (!userDoc.exists || createIfNew) {
+      final newUser = UserModel(
+        uid: user.uid,
+        phoneNumber: user.phoneNumber ?? '',
+        displayName: user.displayName,
+        profileImageUrl: user.photoURL,
+        email: user.email,
+        createdAt: user.metadata.creationTime,
+        settings: const UserSettings(),
+      );
+      await userDocRef.set(newUser.toJson());
+    } else if (updateProfile && userDoc.exists) {
+      try {
+        final existingUser = UserModel.fromJson(userDoc.data()!);
+        final updatedUser = existingUser.copyWith(
+          displayName: user.displayName,
+          profileImageUrl: user.photoURL,
+        );
+
+        await userDocRef.set(updatedUser.toJson());
+      } catch (e) {
+        await userDocRef.set({
+          'displayName': user.displayName,
+          'profileImageUrl': user.photoURL,
+        }, SetOptions(merge: true));
+      }
     }
   }
 }

@@ -5,13 +5,15 @@ import './dependencies.dart';
 import './shell_scaffold.dart';
 
 import './core/screens/not_found_screen.dart';
-import './core/screens/placeholder_screen.dart';
 
 import './features/splash/presentation/screens/splash_screen.dart';
 import './features/auth/presentation/screens/enter_number_screen.dart';
 import './features/auth/presentation/screens/verify_otp_screen.dart';
 import './features/auth/presentation/screens/new_user_screen.dart';
+
 import './features/home/presentation/screens/home_screen.dart';
+
+import './features/settings/presentation/screens/settings_screen.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -82,20 +84,21 @@ class AppRouter {
         },
         routes: [
           GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
-          GoRoute(
-            path: '/calls',
-            builder: (context, state) =>
-                const PlaceholderScreen(title: 'Calls'),
-          ),
-          GoRoute(
-            path: '/people',
-            builder: (context, state) =>
-                const PlaceholderScreen(title: 'People'),
-          ),
+          // GoRoute(
+          //   path: '/calls',
+          //   builder: (context, state) =>
+          //       const PlaceholderScreen(title: 'Calls'),
+          // ),
+          // GoRoute(
+          //   path: '/people',
+          //   builder: (context, state) =>
+          //       const PlaceholderScreen(title: 'People'),
+          // ),
           GoRoute(
             path: '/settings',
-            builder: (context, state) =>
-                const PlaceholderScreen(title: 'Settings'),
+            builder: (context, state) {
+              return const SettingsScreen();
+            },
           ),
         ],
       ),
