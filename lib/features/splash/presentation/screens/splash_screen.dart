@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/cubits/app_user/app_user_cubit.dart';
 import '../../../../dependencies.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -45,6 +47,10 @@ class _SplashScreenState extends State<SplashScreen> {
       if (firebaseAuth.currentUser != null &&
           firebaseAuth.currentUser!.displayName != null) {
         if (mounted) {
+          context.read<AppUserCubit>().startUserStream(
+            firebaseAuth.currentUser!.uid,
+          );
+
           context.go('/');
         }
       }
