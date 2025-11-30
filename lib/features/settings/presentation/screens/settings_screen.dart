@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../l10n/app_localizations.dart';
+
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/cubits/app_localization/app_localization_cubit.dart';
 import '../../../../core/cubits/app_theme/app_theme_cubit.dart';
 import '../../../../core/cubits/app_user/app_user_cubit.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
+
 import '../widgets/settings_profile_header.dart';
 import '../widgets/settings_section.dart';
 import '../widgets/settings_tile.dart';
@@ -14,8 +17,34 @@ import '../widgets/settings_tile.dart';
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
+  Future<bool> _showLogoutConfirmation(BuildContext context) async {
+    final appLocalizations = AppLocalizations.of(context)!;
+
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(appLocalizations.confirmLogout),
+              content: Text(appLocalizations.logoutSubtitle),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(appLocalizations.cancel),
+                ),
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text(appLocalizations.logOut),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -23,7 +52,7 @@ class SettingsScreen extends StatelessWidget {
           ? AppColors.darkSurfaceContainer
           : AppColors.surfaceContainer,
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text(appLocalizations.settings),
         centerTitle: true,
         backgroundColor: isDark ? AppColors.darkSurface : AppColors.surface,
         elevation: 0,
@@ -47,27 +76,27 @@ class SettingsScreen extends StatelessWidget {
                 },
               ),
               SettingsSection(
-                title: 'Account',
+                title: appLocalizations.account,
                 children: [
                   SettingsTile(
                     icon: Icons.privacy_tip_outlined,
-                    title: 'Privacy',
-                    subtitle: 'Last seen, profile photo, about',
+                    title: appLocalizations.privacy,
+                    subtitle: appLocalizations.privacySubtitle,
                     onTap: () {
                       // TODO: Navigate to privacy settings
                     },
                   ),
                   SettingsTile(
                     icon: Icons.security_outlined,
-                    title: 'Security',
-                    subtitle: 'Two-step verification',
+                    title: appLocalizations.security,
+                    subtitle: appLocalizations.securitySubtitle,
                     onTap: () {
                       // TODO: Navigate to security settings
                     },
                   ),
                   SettingsTile(
                     icon: Icons.delete_outline,
-                    title: 'Delete Account',
+                    title: appLocalizations.deleteAccount,
                     iconColor: AppColors.error,
                     titleColor: AppColors.error,
                     showDivider: false,
@@ -78,17 +107,21 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
               SettingsSection(
-                title: 'Appearance',
+                title: appLocalizations.appearance,
                 children: [
                   BlocBuilder<AppThemeCubit, AppThemeState>(
                     builder: (context, themeState) {
-                      String themeName = 'System';
-                      if (themeState is LightThemeMode) themeName = 'Light';
-                      if (themeState is DarkThemeMode) themeName = 'Dark';
+                      String themeName = appLocalizations.system;
+                      if (themeState is LightThemeMode) {
+                        themeName = appLocalizations.light;
+                      }
+                      if (themeState is DarkThemeMode) {
+                        themeName = appLocalizations.dark;
+                      }
 
                       return SettingsTile(
                         icon: Icons.brightness_6_outlined,
-                        title: 'Theme',
+                        title: appLocalizations.theme,
                         subtitle: themeName,
                         onTap: () => _showThemeSelector(context, themeState),
                       );
@@ -98,7 +131,7 @@ class SettingsScreen extends StatelessWidget {
                     builder: (context, localeState) {
                       return SettingsTile(
                         icon: Icons.language_outlined,
-                        title: 'App Language',
+                        title: appLocalizations.appLanguage,
                         subtitle: _getLanguageName(
                           localeState.locale.languageCode,
                         ),
@@ -116,20 +149,20 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
               SettingsSection(
-                title: 'Notifications',
+                title: appLocalizations.notifcations,
                 children: [
                   SettingsTile(
                     icon: Icons.notifications_outlined,
-                    title: 'Notifications',
-                    subtitle: 'Message, group & call tones',
+                    title: appLocalizations.notifcations,
+                    subtitle: appLocalizations.notificationsSubtitle,
                     onTap: () {
                       // TODO: Navigate to notification settings
                     },
                   ),
                   SettingsTile(
                     icon: Icons.data_usage_outlined,
-                    title: 'Storage and Data',
-                    subtitle: 'Network usage, auto-download',
+                    title: appLocalizations.storageAndData,
+                    subtitle: appLocalizations.storageAndDataSubtitle,
                     showDivider: false,
                     onTap: () {
                       // TODO: Navigate to storage settings
@@ -138,16 +171,16 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
               SettingsSection(
-                title: 'Help',
+                title: appLocalizations.help,
                 children: [
                   SettingsTile(
                     icon: Icons.help_outline,
-                    title: 'Help Center',
+                    title: appLocalizations.helpCenter,
                     onTap: () {},
                   ),
                   SettingsTile(
                     icon: Icons.info_outline,
-                    title: 'App Info',
+                    title: appLocalizations.appInfo,
                     showDivider: false,
                     onTap: () {},
                   ),
@@ -158,13 +191,17 @@ class SettingsScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: OutlinedButton.icon(
                   onPressed: () async {
-                    await context.read<AppUserCubit>().removeAppUser();
-                    if (context.mounted) {
-                      context.go('/enter-number');
+                    final shouldLogout = await _showLogoutConfirmation(context);
+
+                    if (shouldLogout == true && context.mounted) {
+                      await context.read<AppUserCubit>().removeAppUser();
+                      if (context.mounted) {
+                        context.go('/enter-number');
+                      }
                     }
                   },
                   icon: const Icon(Icons.logout),
-                  label: const Text('Log Out'),
+                  label: Text(appLocalizations.logOut),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.error,
                     side: const BorderSide(color: AppColors.error),
@@ -177,7 +214,7 @@ class SettingsScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      'Calling App',
+                      appLocalizations.appName,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: isDark
                             ? AppColors.darkOnSurfaceVariant
@@ -185,7 +222,7 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Version 1.0.0',
+                      appLocalizations.version('1.0.0'),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: isDark
                             ? AppColors.darkOnSurfaceVariant

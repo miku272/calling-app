@@ -79,5 +79,110 @@
   "searchCountry": "Search country",
   "@searchCountry": {
     "description": "Notifying users to search the country"
+  },
+  "account": "Account",
+  "@account": {
+    "description": "Account word text"
+  },
+  "privacy": "Privacy",
+  "@privacy": {
+    "description": "Privacy word text"
+  },
+  "privacySubtitle": "Last seen, profile photo, about",
+  "@privacySubtitle": {
+    "description": "Subtitle text for privacy settings"
+  },
+  "security": "Security",
+  "@security": {
+    "description": "Security word text"
+  },
+  "securitySubtitle": "Two-step verification",
+  "@securitySubtitle": {
+    "description": "Subtitle text for security settings"
+  },
+  "deleteAccount": "Delete account",
+  "@deleteAccount": {
+    "description": "Delete account word text"
+  },
+  "appearance": "Appearance",
+  "@appearance": {
+    "description": "Appearance word text"
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme word text"
+  },
+  "light": "Light",
+  "@light": {
+    "description": "Light theme option"
+  },
+  "dark": "Dark",
+  "@dark": {
+    "description": "Dark theme option"
+  },
+  "system": "System",
+  "@system": {
+    "description": "System default theme option"
+  },
+  "appLanguage": "App Language",
+  "@appLanguage": {
+    "description": "App Language word text"
+  },
+  "english": "English",
+  "@english": {
+    "description": "English language option"
+  },
+  "notifcations": "Notifications",
+  "@notifcations": {
+    "description": "Notifications word text"
+  },
+  "notificationsSubtitle": "Message & call tones",
+  "@notificationsSubtitle": {
+    "description": "Subtitle text for notifications settings"
+  },
+  "storageAndData": "Storage and Data",
+  "@storageAndData": {
+    "description": "Storage and Data word text"
+  },
+  "storageAndDataSubtitle": "Network usage, auto-download",
+  "@storageAndDataSubtitle": {
+    "description": "Subtitle text for storage and data settings"
+  },
+  "help": "Help",
+  "@help": {
+    "description": "Help word text"
+  },
+  "helpCenter": "Help Center",
+  "@helpCenter": {
+    "description": "Help Center word text"
+  },
+  "appInfo": "App Info",
+  "@appInfo": {
+    "description": "App Info word text"
+  },
+  "logOut": "Log Out",
+  "@logOut": {
+    "description": "Log Out word text"
+  },
+  "confirmLogout": "log out?",
+  "@confirmLogout": {
+    "description": "Asking user to confirm logout action"
+  },
+  "logoutSubtitle": "Are you sure you want to log out?",
+  "@logoutSubtitle": {
+    "description": "Subtitle text for logout confirmation dialog"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  "version": "Version {versionCode}",
+  "@version": {
+    "placeholders": {
+      "versionCode": {
+        "type": "String"
+      }
+    },
+    "description": "Version word text"
   }
 }
